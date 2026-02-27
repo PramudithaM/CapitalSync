@@ -1,12 +1,15 @@
 import apiClient from './apiClient';
 
-const TRANSACTION_ENDPOINT = '/api/transactions';
+export const getAllTransactions = async (page = 1, limit = 50, filters = {}) => {
+  // Remove empty string / null / undefined values so backend receives clean params
+  const cleanedFilters = Object.fromEntries(
+    Object.entries(filters).filter(([_, v]) => v !== '' && v !== null && v !== undefined && v !== 0)
+  );
 
-/**
- * Get all transactions (combined income and expenses)
- * @returns {Promise<Array>} List of all transactions
- */
-export const getAllTransactions = async () => {
-  const response = await apiClient.get(`${TRANSACTION_ENDPOINT}/`);
+  const params = { page, limit, ...cleanedFilters };
+
+  console.log('Fetching transactions with params:', params); // helpful for debugging
+
+  const response = await apiClient.get('/api/transactions/', { params });
   return response.data;
 };
