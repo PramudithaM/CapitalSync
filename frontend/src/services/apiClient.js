@@ -35,7 +35,7 @@ apiClient.interceptors.response.use(
     if (error.response) {
       // Server responded with error status
       const { status, data } = error.response;
-      
+
       if (status === 401) {
         console.error('Unauthorized - Please login again');
         // You could redirect to login page here
@@ -46,7 +46,7 @@ apiClient.interceptors.response.use(
       } else if (status >= 500) {
         console.error('Server error - Please try again later');
       }
-      
+
       // Return error with message
       return Promise.reject({
         status,

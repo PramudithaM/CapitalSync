@@ -12,7 +12,7 @@
   --color-primary: #053345;
 
   --color-light-100: #cefafe;
-  --color-light-200: #ffffff;
+  --color-light-200: #a2f4fd;
 
   --color-gray-100: #005f78;
 
@@ -33,7 +33,7 @@
   body {
     font-family: "Poppins", sans-serif;
     font-optical-sizing: auto;
-    background: #001233;
+    background: #030014;
   }
 
   h1 {
@@ -98,7 +98,7 @@
     }
 
     & input {
-      @apply w-full bg-transparent py-2 sm:pr-2 pl-2 text-base text-[#8080FF] placeholder-light-200 outline-hidden;
+      @apply w-full bg-transparent py-2 sm:pr-2 pl-2 text-base text-gray-200 placeholder-light-200 outline-hidden;
     }
   }
 

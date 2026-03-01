@@ -2,7 +2,7 @@ import React from 'react'
 
 const LatesFiveIncomes = ({totalIncome,latestIncomes,}) => {
   return (
-    <div className="w-80 h-103.5 bg-gray-400/18 px-5 py-5 rounded-lg mt-10 shadow-md 
+    <div className="w-80 bg-gray-400/18 px-5 py-5 border rounded-lg mt-10 shadow-md 
                     transition-all duration-300 
                     hover:shadow-xl hover:scale-105 ">
   <div>
@@ -11,11 +11,11 @@ const LatesFiveIncomes = ({totalIncome,latestIncomes,}) => {
     </h2>
   </div>
   <div className='flex justify-between'>
-    <div className='flex justify-center w-18 bg-[#8080FF] rounded text-xs p-1 mb-6'>
-      <p className='text-white'>Latest Five</p>
+    <div className='flex justify-center w-18 bg-green-500 rounded text-xs p-1 mb-6'>
+      <p>Latest Five</p>
     </div>
     <div>
-      <span className='text-white text-lg'>$ {totalIncome}</span>
+      <span className='text-green-500 text-lg'>$ {totalIncome}</span>
     </div>
   </div>
     
@@ -25,9 +25,9 @@ const LatesFiveIncomes = ({totalIncome,latestIncomes,}) => {
       <p className="text-sm text-gray-500">No income records</p>
     ) : (
       latestIncomes.map(item => (
-        <div key={item.id} className="flex justify-between items-center bg-gray-500/15 px-4 py-2 rounded-md text-white">
+        <div key={item.id} className="flex justify-between items-center bg-gray-500/15 px-4 py-2 rounded-md text-green-500">
           <span>{item.category}</span>
-          <span className="text-[#8080FF] font-medium">
+          <span className="text-green-500 font-medium">
             +{item.amount}
           </span>
         </div>

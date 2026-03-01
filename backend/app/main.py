@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.routes import income, expense, transaction, categories  # ← added categories
+from app.routes import income, expense, transaction, categories, analytics
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,6 +23,8 @@ app.include_router(income.router)
 app.include_router(expense.router)
 app.include_router(transaction.router)
 app.include_router(categories.router) 
+app.include_router(analytics.router)
+
 @app.get("/")
 def read_root():
     return {"message": "WealthTrack API is running"}

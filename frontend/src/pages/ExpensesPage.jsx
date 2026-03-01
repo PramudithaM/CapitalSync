@@ -48,9 +48,9 @@ const ExpensesPage = () => {
             };
 
             await createExpense(expenseData);
-            
+
             setToast({ message: 'Expense added successfully!', type: 'success' });
-            
+
             // Clear form
             setTitle('');
             setExpenseAmount('');
@@ -60,54 +60,54 @@ const ExpensesPage = () => {
             setNotes('');
         } catch (error) {
             console.error('Error creating expense:', error);
-            setToast({ 
-                message: error.message || 'Failed to add expense. Please try again.', 
-                type: 'error' 
+            setToast({
+                message: error.message || 'Failed to add expense. Please try again.',
+                type: 'error'
             });
         } finally {
             setLoading(false);
         }
     };
 
-  return (
-    <div className='pattern'>
-        <DashBar/>
-        <div className='wrapper flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12'>
-            <header className='border border-slate-700 rounded-2xl p-3 sm:p-4 md:p-5 w-full sm:max-w-md md:max-w-lg lg:max-w-2xl'>
-                <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-white'>Add Expenses</h1>
-                <p className='text-center text-sm sm:text-base text-[#0353a4] mt-1'>Track your expenses and sources</p>
-                <div className='w-full bg-gray-400/18 p-4 sm:p-5 md:p-6 rounded-2xl shadow-light-100/10 mt-4'>
-                    <div>
-                        <ExpenseDetails text= "Title" />
-                    <ExpenseTitle title={title} setTitle={setTitle} />
-                    <ExpenseDetails text= "Amount" />
-                    <ExpenseAmount expenseAmount = {expenseAmount} setExpenseAmount = {setExpenseAmount} />
-                    <ExpenseDetails text= "Category" />
-                    <ExpenseSelect value={category} onChange={setCategory} />
-                    <ExpenseDetails text= "Date" />
-                    <ExpneseCalander value={date} onChange={setDate} />
-                    <ExpenseDetails text= "Payment Method" />
-                    <ExpenseSourceSelect value={paymentMethod} onChange={setPaymentMethod} />
-                    <ExpenseDetails text= "Note(Optional)" />
-                    <ExpenseNotes notes={notes} setNotes ={setNotes} />
-                    </div>
-                    <div className='flex justify-center'>
-                        <AddButton text = "Add Expenses" onClick={handleSubmit} loading={loading} />
-                    </div>
-                    
-                </div>
-            </header>
+    return (
+        <div className='pattern'>
+            <DashBar />
+            <div className='wrapper  flex items-center justify-center'>
+                <header className='border border-slate-700 rounded-2xl p-4'>
+                    <h1>Add Expenses</h1>
+                    <p className='text-center text-white text-white'>Track your expenses and  sources</p>
+                    <div className='w-125 bg-gray-400/18  p-5 rounded-2xl  shadow-light-100/10 mt-4'>
+                        <div>
+                            <ExpenseDetails text="Title" />
+                            <ExpenseTitle title={title} setTitle={setTitle} />
+                            <ExpenseDetails text="Amount (Rs)" />
+                            <ExpenseAmount expenseAmount={expenseAmount} setExpenseAmount={setExpenseAmount} />
+                            <ExpenseDetails text="Category" />
+                            <ExpenseSelect value={category} onChange={setCategory} />
+                            <ExpenseDetails text="Date" />
+                            <ExpneseCalander value={date} onChange={setDate} />
+                            <ExpenseDetails text="Payment Method" />
+                            <ExpenseSourceSelect value={paymentMethod} onChange={setPaymentMethod} />
+                            <ExpenseDetails text="Note(Optional)" />
+                            <ExpenseNotes notes={notes} setNotes={setNotes} />
+                        </div>
+                        <div className=' flex justify-center'>
+                            <AddButton text="Add Expenses" onClick={handleSubmit} loading={loading} />
+                        </div>
 
+                    </div>
+                </header>
+
+            </div>
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </div>
-        {toast && (
-            <Toast
-                message={toast.message}
-                type={toast.type}
-                onClose={() => setToast(null)}
-            />
-        )}
-    </div>
-  )
+    )
 }
 
 export default ExpensesPage
