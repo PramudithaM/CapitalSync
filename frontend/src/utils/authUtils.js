@@ -1,4 +1,5 @@
 import { auth } from '../firebase';
+<<<<<<< Updated upstream
 import { onAuthStateChanged } from 'firebase/auth';
 
 /**
@@ -29,12 +30,28 @@ export const getAuthToken = async () => {
       return null;
     }
     return await user.getIdToken(true); // true = force refresh if expired
+=======
+
+/**
+ * Get the current user's Firebase ID token
+ * @returns {Promise<string|null>} The ID token or null if not authenticated
+ */
+export const getAuthToken = async () => {
+  try {
+    const user = auth.currentUser;
+    if (user) {
+      const token = await user.getIdToken();
+      return token;
+    }
+    return null;
+>>>>>>> Stashed changes
   } catch (error) {
     console.error('Error getting auth token:', error);
     return null;
   }
 };
 
+<<<<<<< Updated upstream
 export const isAuthenticated = async () => {
   const user = await waitForAuth();
   return user !== null;
@@ -80,3 +97,20 @@ export const getCurrentUserId = async () => {
 // export const getCurrentUserId = () => {
 //   return auth.currentUser?.uid || null;
 // };
+=======
+/**
+ * Check if user is authenticated
+ * @returns {boolean} True if user is logged in
+ */
+export const isAuthenticated = () => {
+  return auth.currentUser !== null;
+};
+
+/**
+ * Get current user ID
+ * @returns {string|null} User ID or null
+ */
+export const getCurrentUserId = () => {
+  return auth.currentUser?.uid || null;
+};
+>>>>>>> Stashed changes

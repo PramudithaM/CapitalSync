@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
+import React, { useEffect, useState, useMemo } from 'react'
+=======
 import React, { useEffect, useState } from 'react'
+>>>>>>> Stashed changes
 import DashBar from '../assets/component/DashBar'
 import {
   BarChart,
@@ -15,7 +19,10 @@ import PiChart from '../assets/component/PiChart';
 import HoverCard from '../assets/component/HoverCard';
 import { getAllIncomes } from '../services/incomeService'
 import { getAllExpenses } from '../services/expenseService'
+<<<<<<< Updated upstream
+=======
 import { getAllTransactions } from '../services/transactionService';
+>>>>>>> Stashed changes
 import { auth } from '../firebase'
 import AccountCard from '../assets/component/AccountCard';
 import LatesFiveIncomes from '../assets/component/LatesFiveIncomes';
@@ -30,7 +37,11 @@ const Home = () => {
   const [incomes, setIncomes] = useState([])
   const [expenses, setExpenses] = useState([])
   const [loading, setLoading] = useState(true)
+<<<<<<< Updated upstream
+
+=======
   
+>>>>>>> Stashed changes
 
   const fetchData = async () => {
     setLoading(true)
@@ -38,8 +49,13 @@ const Home = () => {
       const [incRes, expRes] = await Promise.all([getAllIncomes(), getAllExpenses()])
 
       console.log("Incomes from backend:", incRes)   // <<-- THIS LINE
+<<<<<<< Updated upstream
+      console.log("Expenses from backend:", expRes)
+
+=======
     console.log("Expenses from backend:", expRes)
     
+>>>>>>> Stashed changes
       setIncomes(Array.isArray(incRes) ? incRes : [])
       setExpenses(Array.isArray(expRes) ? expRes : [])
     } catch (err) {
@@ -65,6 +81,32 @@ const Home = () => {
 
   // fix bar chart
   const currentYear = new Date().getFullYear()
+<<<<<<< Updated upstream
+  const [selectedYear, setSelectedYear] = useState(currentYear)
+
+  const filterByYear = (items, year) =>
+    items.filter(it => {
+      const d = new Date(it.date)
+      return d.getFullYear() === year
+    })
+
+
+  const getTotalByCategory = (data, category) => {
+    return data
+      .filter(item => item.category === category)
+      .reduce((sum, item) => sum + Number(item.amount), 0)
+  }
+  // Calculate Income by Category
+  const totalSalary = getTotalByCategory(incomes, "Salary/Wages")
+  const totalInvestment = getTotalByCategory(incomes, "Investment")
+  const totalBusinessIncome = getTotalByCategory(incomes, "Business Income")
+
+  //Calculate Expense by Category
+
+  const totalFoodandDrink = getTotalByCategory(expenses, "Food & Drink")
+  const totalHousing = getTotalByCategory(expenses, "Housing")
+  const totalTransportation = getTotalByCategory(expenses, "Transportation")
+=======
 const [selectedYear, setSelectedYear] = useState(currentYear)
 
 const filterByYear = (items, year) =>
@@ -89,13 +131,19 @@ const  totalBusinessIncome = getTotalByCategory(incomes, "Business Income")
 const totalFoodandDrink = getTotalByCategory(expenses, "Food & Drink")
 const totalHousing = getTotalByCategory(expenses, "Housing")
 const totalTransportation = getTotalByCategory(expenses, "Transportation") 
+>>>>>>> Stashed changes
 
   // compute totals and monthly series for charts
 
   const totalIncome = incomes.reduce((s, i) => s + Number(i.amount || 0), 0)
   const totalExpense = expenses.reduce((s, e) => s + Number(e.amount || 0), 0)
+<<<<<<< Updated upstream
+  const mainAccountBalance = totalIncome - totalExpense
+
+=======
   const mainAccountBalance = totalIncome-totalExpense
   
+>>>>>>> Stashed changes
 
   // const aggregateByMonth = (items) => {
   //   const months = Array(12).fill(0)
@@ -107,6 +155,20 @@ const totalTransportation = getTotalByCategory(expenses, "Transportation")
   //   return months
   // }
   const aggregateByMonth = (items) => {
+<<<<<<< Updated upstream
+    const months = Array(12).fill(0)
+
+    items.forEach(it => {
+      const d = new Date(it.date)
+      if (!isNaN(d)) {
+        const month = d.getMonth()
+        months[month] += Number(it.amount || 0)
+      }
+    })
+
+    return months
+  }
+=======
   const months = Array(12).fill(0)
 
   items.forEach(it => {
@@ -119,11 +181,89 @@ const totalTransportation = getTotalByCategory(expenses, "Transportation")
 
   return months
 }
+>>>>>>> Stashed changes
 
 
   // const incMonths = aggregateByMonth(incomes)
   // const expMonths = aggregateByMonth(expenses)
 
+<<<<<<< Updated upstream
+  // Replace the chartData generation section with this:
+
+  const getLast6MonthsData = () => {
+    const now = new Date();
+    const last6Months = [];
+
+    // Generate last 6 months
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      last6Months.push({
+        month: monthNames[date.getMonth()],
+        year: date.getFullYear(),
+        monthIndex: date.getMonth(),
+        income: 0,
+        expenses: 0
+      });
+    }
+
+    // Aggregate incomes for last 6 months
+    incomes.forEach((item) => {
+      const d = item.date ? new Date(item.date) : null;
+      if (d instanceof Date && !isNaN(d)) {
+        const itemMonth = d.getMonth();
+        const itemYear = d.getFullYear();
+
+        const monthData = last6Months.find(
+          m => m.monthIndex === itemMonth && m.year === itemYear
+        );
+
+        if (monthData) {
+          monthData.income += Number(item.amount || 0);
+        }
+      }
+    });
+
+    // Aggregate expenses for last 6 months
+    expenses.forEach((item) => {
+      const d = item.date ? new Date(item.date) : null;
+      if (d instanceof Date && !isNaN(d)) {
+        const itemMonth = d.getMonth();
+        const itemYear = d.getFullYear();
+
+        const monthData = last6Months.find(
+          m => m.monthIndex === itemMonth && m.year === itemYear
+        );
+
+        if (monthData) {
+          monthData.expenses += Number(item.amount || 0);
+        }
+      }
+    });
+
+    // Format for chart (show month and year if spans multiple years)
+    return last6Months.map(m => ({
+      month: m.year === now.getFullYear() ? m.month : `${m.month} ${m.year}`,
+      income: m.income,
+      expenses: m.expenses
+    }));
+  };
+
+  const chartData = useMemo(() => getLast6MonthsData(), [incomes, expenses]);
+
+
+  //Transaction History functionality has been removed because it was unused and caused redundant API calls on mount.
+  //Newest transaction first
+  const sortByLatest = (a, b) =>
+    new Date(b.created_at) - new Date(a.created_at);
+  //Latest 5
+  const latestIncomes = [...incomes]
+    .sort(sortByLatest)
+    .slice(0, 5);
+
+  const latestExpenses = [...expenses]
+    .sort(sortByLatest)
+    .slice(0, 5);
+=======
 // Replace the chartData generation section with this:
 
 const getLast6MonthsData = () => {
@@ -241,35 +381,72 @@ const latestIncomes = incomes
 const latestExpenses = expenses
   .sort(sortByLatest)
   .slice(0, 5);
+>>>>>>> Stashed changes
 
 
 
 
   return (
+<<<<<<< Updated upstream
     <div className='bg-hero-pattern w-full h-screen bg-center bg-cover absolute top-0 left-0' >
       <DashBar />
       <div className='flex justify-center items-center'>
         <div className='px-5  xs:p-10 max-w-full mx-auto flex flex-col relative z-10  flex items-center justify-center '>
-        <div className='w-full flex justify-between '>
-            <div><AccountCard mainAccountBalance={mainAccountBalance} totalSalary={totalSalary} totalInvestment={totalInvestment} totalBusinessIncome = {totalBusinessIncome} totalFoodandDrink={totalFoodandDrink} totalHousing={totalHousing} totalTransportation= {totalTransportation}/></div>
+          <div className='w-full flex justify-between '>
+            <div><AccountCard mainAccountBalance={mainAccountBalance} totalSalary={totalSalary} totalInvestment={totalInvestment} totalBusinessIncome={totalBusinessIncome} totalFoodandDrink={totalFoodandDrink} totalHousing={totalHousing} totalTransportation={totalTransportation} /></div>
             <div className=''>
               <IncomeExpensesChart data={chartData} />
 
             </div>
-        </div>
-        <div className='w-full flex justify-between gap-13'>
-          
-          <LatesFiveIncomes  latestIncomes = {latestIncomes} totalIncome = {totalIncome} />
-        
-        
-          <LatestFiveExpenses latestExpenses = {latestExpenses} totalExpense = {totalExpense} />
-        
-        <div>
-          <div className='w-160 bg-dark-100/20 px-2 py-5  rounded-lg mt-10  justify-center shadow-md 
+          </div>
+          <div className='w-full flex justify-between gap-13'>
+
+            <LatesFiveIncomes latestIncomes={latestIncomes} totalIncome={totalIncome} />
+
+
+            <LatestFiveExpenses latestExpenses={latestExpenses} totalExpense={totalExpense} />
+
+            <div>
+              <div className='w-160 bg-dark-100/20 px-2 py-5  rounded-lg mt-10  justify-center shadow-md 
                     transition-all duration-300 
                     hover:shadow-xl hover:scale-105'>
-           <div className='px-3'>
-            <span className='text-white  text-2xl font-bold '>Analytics</span>
+                <div className='px-3'>
+                  <span className='text-white  text-2xl font-bold '>Analytics</span>
+                </div>
+                <div className=''><PiChart totalIncome={totalIncome} totalExpense={totalExpense} /></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+=======
+    <div className='bg-hero-pattern w-full min-h-screen bg-center bg-cover absolute top-0 left-0' >
+      <DashBar />
+      <div className='flex justify-center items-center mt-10 mb-10'>
+        <div className='px-4 sm:px-6 md:px-8 lg:px-10 max-w-full mx-auto flex flex-col relative z-10 items-center justify-center'>
+        <div className='w-full flex flex-col lg:flex-row justify-between gap-4 md:gap-6'>
+            <div className='w-full lg:flex-1'><AccountCard mainAccountBalance={mainAccountBalance} totalSalary={totalSalary} totalInvestment={totalInvestment} totalBusinessIncome = {totalBusinessIncome} totalFoodandDrink={totalFoodandDrink} totalHousing={totalHousing} totalTransportation= {totalTransportation}/></div>
+            <div className='w-full lg:flex-1'>
+              <IncomeExpensesChart data={chartData} />
+
+            </div>
+        </div>
+        <div className='w-full flex flex-col md:flex-row justify-between gap-4 md:gap-6 lg:gap-6'>
+          
+          <div className='w-full md:flex-1 flex justify-between  gap-6'>
+            <div className='w-full md:flex-1 '><LatesFiveIncomes  latestIncomes = {latestIncomes} totalIncome = {totalIncome} /></div>
+        
+        
+          <div className='w-full md:flex-1'><LatestFiveExpenses latestExpenses = {latestExpenses} totalExpense = {totalExpense} /></div>
+          </div>
+        
+        <div className='w-full md:flex-1'>
+          <div className='w-full bg-gray-400/18 px-3 sm:px-4 py-5 rounded-lg mt-6 md:mt-10 justify-center shadow-md 
+                    transition-all duration-300 
+                    hover:shadow-xl hover:scale-105'>
+           <div className='px-2 sm:px-3'>
+            <span className='text-white text-lg sm:text-xl md:text-2xl font-bold'>Analytics</span>
            </div>
            <div className=''><PiChart totalIncome = {totalIncome} totalExpense ={totalExpense}  /></div>            
           </div>
@@ -278,6 +455,7 @@ const latestExpenses = expenses
         </div>
 
       </div>
+>>>>>>> Stashed changes
       </div>
     </div>
   )

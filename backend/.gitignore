@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 app/__pycache__/
 app/auth/__pycache__/
+utils.py

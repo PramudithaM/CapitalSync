@@ -12,7 +12,11 @@
   --color-primary: #053345;
 
   --color-light-100: #cefafe;
+<<<<<<< Updated upstream
   --color-light-200: #a2f4fd;
+=======
+  --color-light-200: #ffffff;
+>>>>>>> Stashed changes
 
   --color-gray-100: #005f78;
 
@@ -31,9 +35,13 @@
 
 @layer base {
   body {
-    font-family: "Poppins", sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-optical-sizing: auto;
+<<<<<<< Updated upstream
     background: #030014;
+=======
+    background: #001233;
+>>>>>>> Stashed changes
   }
 
   h1 {
@@ -98,7 +106,11 @@
     }
 
     & input {
+<<<<<<< Updated upstream
       @apply w-full bg-transparent py-2 sm:pr-2 pl-2 text-base text-gray-200 placeholder-light-200 outline-hidden;
+=======
+      @apply w-full bg-transparent py-2 sm:pr-2 pl-2 text-base text-[#8080FF] placeholder-light-200 outline-hidden;
+>>>>>>> Stashed changes
     }
   }
 

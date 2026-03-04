@@ -12,6 +12,7 @@ export const getAllTransactions = async (page = 1, limit = 50, filters = {}) => 
 
   const response = await apiClient.get('/api/transactions/', { params });
   return response.data;
+<<<<<<< Updated upstream
 };
 // import apiClient from './apiClient';
 
@@ -40,3 +41,6 @@ export const getAllTransactions = async (page = 1, limit = 50, filters = {}) => 
 // //   const response = await apiClient.get(`${TRANSACTION_ENDPOINT}/`);
 // //   return response.data;
 // // };
+=======
+};
+>>>>>>> Stashed changes

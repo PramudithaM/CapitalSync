@@ -71,8 +71,6 @@ async def get_income(
     
     return income
 
-@router.get("/{}")
-
 @router.put("/{income_id}", response_model=IncomeResponse)
 async def update_income(
     income_id: str,

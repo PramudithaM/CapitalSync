@@ -8,7 +8,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+<<<<<<< Updated upstream
 const COLORS = ["#D0312D", "#990F02", "#E3242B", "#60100B"];
+=======
+const COLORS = ["#0353A4", "#024A93", "#013F82", "#013472","#012A5F"];
+>>>>>>> Stashed changes
 
 const ExpenseAnalaticPichart = ({totalTransportation,totalBills,totalFoodandDrink,totalHealth,totalHousing}) => {
 
@@ -24,7 +28,11 @@ const ExpenseAnalaticPichart = ({totalTransportation,totalBills,totalFoodandDrin
     <div >
           
     
+<<<<<<< Updated upstream
           <div className="w-100 h-84 bg-gray-500/8 rounded border-3xl flex justify-center items-center mb-10">
+=======
+          <div className="w-100 h-84 bg-gray-500/8 rounded border-3xl flex justify-center items-center mb-10 ">
+>>>>>>> Stashed changes
             <ResponsiveContainer>
               <PieChart>
                 <Pie

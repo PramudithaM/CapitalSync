@@ -8,3 +8,4 @@ pydantic-settings
 firebase-admin
 python-jose[cryptography]
 passlib[bcrypt]
+python-dateutil
