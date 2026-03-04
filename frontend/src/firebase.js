@@ -15,6 +15,10 @@ const firebaseConfig = {
   measurementId: "G-X55TV1R0P6"
 };
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);

@@ -14,7 +14,11 @@ import {
 
 
 
+<<<<<<< Updated upstream
 const COLORS = ["#489BAE", "#7AD0D9", "#155B6F", "#0D3C4F" , "#0A2026"];
+=======
+const COLORS = ["#8080FF", "#6666E6", "#4D4DCC", "#3333B3" , "#1A1A99"];
+>>>>>>> Stashed changes
 
 const AnalyticPiChart = ({totalSalary,totalBusinessIncome,totalFreelance,totalInvestment,totalOthers}) => {
 

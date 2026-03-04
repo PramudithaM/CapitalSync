@@ -14,7 +14,11 @@ import { createIncome } from '../services/incomeService'
 
 
 const IncomePage = () => {
+<<<<<<< Updated upstream
 
+=======
+    
+>>>>>>> Stashed changes
     const [addDescription, setAddDescription] = useState('');
     const [incomeAmount, setIncomeAmount] = useState('');
     const [category, setCategory] = useState('');
@@ -45,9 +49,15 @@ const IncomePage = () => {
             };
 
             await createIncome(incomeData);
+<<<<<<< Updated upstream
 
             setToast({ message: 'Income added successfully!', type: 'success' });
 
+=======
+            
+            setToast({ message: 'Income added successfully!', type: 'success' });
+            
+>>>>>>> Stashed changes
             // Clear form
             setAddDescription('');
             setIncomeAmount('');
@@ -55,15 +65,22 @@ const IncomePage = () => {
             setDate('');
         } catch (error) {
             console.error('Error creating income:', error);
+<<<<<<< Updated upstream
             setToast({
                 message: error.message || 'Failed to add income. Please try again.',
                 type: 'error'
+=======
+            setToast({ 
+                message: error.message || 'Failed to add income. Please try again.', 
+                type: 'error' 
+>>>>>>> Stashed changes
             });
         } finally {
             setLoading(false);
         }
     };
 
+<<<<<<< Updated upstream
     return (
         <div className='pattern'>
             <DashBar />
@@ -98,6 +115,42 @@ const IncomePage = () => {
             )}
         </div>
     )
+=======
+  return (
+    <div className='bg-hero-pattern w-full min-h-screen bg-center bg-cover absolute top-0 left-0'>
+        <DashBar/>
+        <div className='px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 max-w-7xl mx-auto flex flex-col relative z-10 items-center justify-center'>
+            <header className='border border-slate-700 rounded-2xl p-3 sm:p-4 md:p-5 w-full sm:max-w-md md:max-w-lg lg:max-w-2xl'>
+                <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-white'>Add Income</h1>
+                <p className='text-center text-sm sm:text-base text-[#8080FF] mt-1'>Track your earnings and income sources</p>
+                <div className='w-full bg-gray-400/18 p-4 sm:p-5 md:p-6 rounded-2xl shadow-light-100/10 mt-4'>
+                    <div>
+                        <IncomeDetails text = "Title"/>
+                    <Description addDescription = {addDescription} setAddDescription = {setAddDescription} />
+                    <IncomeDetails text = "Amount" />
+                    <Amount incomeAmount = {incomeAmount} setIncomeAmount = {setIncomeAmount} />
+                    <IncomeDetails text = "Category"/>
+                    <IncomeSelect value={category} onChange={setCategory} />
+                    <IncomeDetails text = "Date"/>
+                    <CalanderDate value={date} onChange={setDate} />
+                    </div>
+                    <div className='flex justify-center'>
+                        <AddButton text = "Add Income" onClick={handleSubmit} loading={loading} />
+                    </div>
+                </div>
+                
+            </header>
+        </div>
+        {toast && (
+            <Toast
+                message={toast.message}
+                type={toast.type}
+                onClose={() => setToast(null)}
+            />
+        )}
+    </div>
+  )
+>>>>>>> Stashed changes
 }
 
 export default IncomePage

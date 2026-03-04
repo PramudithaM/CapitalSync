@@ -122,15 +122,24 @@ const TransactionPage = () => {
                                     <div className="flex-1">
                                         <span className="font-medium">{transaction.title || 'Untitled'}</span>
                                         <span className={`ml-2 text-xs px-2 py-1 rounded ${transaction.type === 'income'
+<<<<<<< Updated upstream
                                                 ? 'bg-green-500/20 text-green-400'
                                                 : 'bg-red-500/20 text-red-400'
+=======
+                                                ? 'bg-[#8080FF]/50 text-[#8080FF]'
+                                                : 'bg-[#0353a4]/20 text-[#0353a4]'
+>>>>>>> Stashed changes
                                             }`}>
                                             {transaction.type}
                                         </span>
                                     </div>
                                     <div className="w-32 text-center text-slate-300">{transaction.category}</div>
                                     <div className="w-32 text-center text-slate-400">{formatDate(transaction.date)}</div>
+<<<<<<< Updated upstream
                                     <div className="w-32 text-right font-semibold">{formatAmount(transaction.amount, transaction.type)}</div>
+=======
+                                    <div className="w-32 text-right text-[#0353a4] font-semibold">{formatAmount(transaction.amount, transaction.type)}</div>
+>>>>>>> Stashed changes
                                 </div>
                             ))}
                         </div>

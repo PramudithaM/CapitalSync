@@ -5,7 +5,11 @@ const AddButton = ({ text, onClick, loading = false, disabled = false }) => {
     <button
       onClick={onClick}
       disabled={loading || disabled}
+<<<<<<< Updated upstream
       className={`bg-light-200 py-3.5 rounded-2xl shadow-inner shadow-light-100/10 w-45 h-14 m-5 text-gray-100 text-lg text-center cursor-pointer hover:bg-light-200/80 transition ${
+=======
+      className={`bg-[#8080FF] py-2 rounded-2xl shadow-inner shadow-light-100/10 w-45 h-14 m-5 text-white font-bold text-lg text-center cursor-pointer hover:bg-light-200/80 transition ${
+>>>>>>> Stashed changes
         loading || disabled ? 'opacity-50 cursor-not-allowed' : ''
       }`}
     >

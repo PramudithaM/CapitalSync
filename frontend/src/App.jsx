@@ -10,12 +10,68 @@ import Analytics from './pages/Analytics';
 import ExpensesPage from './pages/ExpensesPage';
 import TransactionPage from './pages/TransactionPage';
 import { useEffect, useState } from 'react';
+<<<<<<< Updated upstream
+=======
+import { auth, logout } from './firebase';
+import { useNavigate, useLocation } from 'react-router-dom';
+>>>>>>> Stashed changes
 
 
 const App = () => {
 
   const [data, setData] = useState(null);
   const API = import.meta.env.VITE_API_URL || '';
+<<<<<<< Updated upstream
+=======
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+    const checkSession = (user) => {
+      if (user) {
+        const sessionStartTime = localStorage.getItem('sessionStartTime');
+        let isValid = true;
+        if (!sessionStartTime) {
+          localStorage.setItem('sessionStartTime', Date.now().toString());
+        } else if (Date.now() - parseInt(sessionStartTime, 10) > TWENTY_FOUR_HOURS) {
+          isValid = false;
+          localStorage.removeItem('sessionStartTime');
+          logout().then(() => {
+            navigate('/login');
+          });
+        }
+
+        if (isValid) {
+          const path = window.location.pathname;
+          if (path === '/' || path === '/login') {
+            navigate('/home-page');
+          }
+        }
+      } else {
+        localStorage.removeItem('sessionStartTime');
+        const path = window.location.pathname;
+        if (path !== '/' && path !== '/login' && path !== '/sign-up' && path !== '/about-us') {
+          navigate('/login');
+        }
+      }
+    };
+
+    const unsub = auth.onAuthStateChanged((user) => {
+      checkSession(user);
+    });
+
+    const intervalId = setInterval(() => {
+      checkSession(auth.currentUser);
+    }, 60 * 1000); // Check every minute
+
+    return () => {
+      unsub();
+      clearInterval(intervalId);
+    };
+  }, []);
+>>>>>>> Stashed changes
 
   useEffect(() => {
     const url = API ? `${API}/` : '/api/';
@@ -27,11 +83,16 @@ const App = () => {
       .then((result) => setData(result))
       .catch((err) => console.error('Failed to load root:', err));
   }, [API]);
+<<<<<<< Updated upstream
   
+=======
+
+>>>>>>> Stashed changes
   return (
     <Routes>
       <Route path="/" element={<Starting />} />
       <Route path="/login" element={<Loginpage />} />
+<<<<<<< Updated upstream
       <Route path="/home-page" element={<Home/>} />
       <Route path="/income-page" element={<IncomePage/>} />
       <Route path="/sign-up" element={<SignUp/>} />
@@ -40,6 +101,16 @@ const App = () => {
       <Route path="/expenses-page" element={<ExpensesPage/>} />
       <Route path="/transaction-page" element={<TransactionPage/>} />
       
+=======
+      <Route path="/home-page" element={<Home />} />
+      <Route path="/income-page" element={<IncomePage />} />
+      <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/about-us" element={<Aboutus />} />
+      <Route path="/analytics" element={<Analytics />} />
+      <Route path="/expenses-page" element={<ExpensesPage />} />
+      <Route path="/transaction-page" element={<TransactionPage />} />
+
+>>>>>>> Stashed changes
     </Routes>
   );
 }
