@@ -29,7 +29,7 @@ export const signInWithEmailFunc = (email, password) =>
   signInWithEmailAndPassword(auth, email, password);
 
 export const signUpwithEmailFunc = (email, password) =>
-  createUserWithEmailAndPassword(auth, email, password);
+    createUserWithEmailAndPassword(auth, email, password);
 //Sign Up Function
 
 export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);

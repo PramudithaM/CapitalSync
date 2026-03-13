@@ -5,7 +5,9 @@ import DashBoard from '../assets/component/DashBoard'
 const Aboutus = () => {
   return (
     <div >
-        <DashBar/>
+        <div className='flex justify-center pt-8'>
+          <DashBar/>
+        </div>
     </div>
   )
 }
