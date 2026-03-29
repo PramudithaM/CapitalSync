@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import { signInWithEmailFunc, signInWithGoogle, signInWithGithub } from '../firebase';
 import bgImage from '../assets/bg-image.jpg'
-import { saveLoginTimestamp } from '../utils/authUtils';
 
 //SignUp
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -36,7 +35,6 @@ const Loginpage = () => {
     try {
       const userCredential = await signInWithEmailFunc(emailAddress, passWord);
       console.log("Signed in user:", userCredential.user);
-      saveLoginTimestamp(); // ✅ Start the 24-hour session clock
       navigate("/home-page"); // go to home page
     } catch (error) {
       console.error("Login error:", error.message);

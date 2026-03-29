@@ -15,6 +15,7 @@ const firebaseConfig = {
   measurementId: "G-X55TV1R0P6"
 };
 
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
@@ -28,7 +29,7 @@ export const signInWithEmailFunc = (email, password) =>
   signInWithEmailAndPassword(auth, email, password);
 
 export const signUpwithEmailFunc = (email, password) =>
-  createUserWithEmailAndPassword(auth, email, password);
+    createUserWithEmailAndPassword(auth, email, password);
 //Sign Up Function
 
 export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);

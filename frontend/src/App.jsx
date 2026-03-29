@@ -9,8 +9,6 @@ import Aboutus from './pages/Aboutus';
 import Analytics from './pages/Analytics';
 import ExpensesPage from './pages/ExpensesPage';
 import TransactionPage from './pages/TransactionPage';
-import ProtectedRoute from './components/ProtectedRoute';
-import PublicRoute from './components/PublicRoute';
 import { useEffect, useState } from 'react';
 
 
@@ -32,24 +30,16 @@ const App = () => {
   
   return (
     <Routes>
-      {/* Landing page — accessible to everyone */}
       <Route path="/" element={<Starting />} />
-
-      {/* Routes that should ONLY be accessible when NOT logged in */}
-      <Route element={<PublicRoute />}>
-        <Route path="/login" element={<Loginpage />} />
-        <Route path="/sign-up" element={<SignUp />} />
-      </Route>
-
-      {/* Protected routes — require active session (< 24 h) */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/home-page" element={<Home/>} />
-        <Route path="/income-page" element={<IncomePage/>} />
-        <Route path="/about-us" element={<Aboutus/>} />
-        <Route path="/analytics" element={<Analytics/>} />
-        <Route path="/expenses-page" element={<ExpensesPage/>} />
-        <Route path="/transaction-page" element={<TransactionPage/>} />
-      </Route>
+      <Route path="/login" element={<Loginpage />} />
+      <Route path="/home-page" element={<Home/>} />
+      <Route path="/income-page" element={<IncomePage/>} />
+      <Route path="/sign-up" element={<SignUp/>} />
+      <Route path="/about-us" element={<Aboutus/>} />
+      <Route path="/analytics" element={<Analytics/>} />
+      <Route path="/expenses-page" element={<ExpensesPage/>} />
+      <Route path="/transaction-page" element={<TransactionPage/>} />
+      
     </Routes>
   );
 }
