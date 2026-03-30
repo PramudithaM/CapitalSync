@@ -77,7 +77,7 @@ export default function ExtractModal({ data, onSave, onClose }) {
 
         {/* Actions */}
         <div className="flex gap-2 px-4 py-3 border-t border-slate-100 flex-shrink-0">
-          <button
+          {/* <button
             onClick={handleDownload}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 text-xs text-slate-600 hover:bg-slate-50 transition-all"
           >
@@ -87,12 +87,12 @@ export default function ExtractModal({ data, onSave, onClose }) {
               <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
             Download
-          </button>
+          </button> */}
           <button
             onClick={onSave}
             className="flex-1 py-2 rounded-xl bg-sky-500 text-white text-xs font-semibold hover:bg-sky-600 active:scale-95 transition-all"
           >
-            Save to History
+            Save Extract Data
           </button>
         </div>
       </div>

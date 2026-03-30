@@ -5,6 +5,7 @@ import ExpenseAnalaticPichart from '../assets/component/ExpenseAnalaticPichart'
 import { auth } from '../firebase'
 import { getAllIncomes } from '../services/incomeService'
 import { getAllExpenses } from '../services/expenseService'
+import InvoiceChatWidget from '../components/InvoiceChat/InvoiceChatWidget';
 
 const Analytics = () => {
 
@@ -304,6 +305,7 @@ const Analytics = () => {
           </div>
         )}
       </div>
+      <InvoiceChatWidget />
     </div>
   )
 }

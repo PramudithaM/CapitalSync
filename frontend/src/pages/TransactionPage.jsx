@@ -4,6 +4,7 @@ import Toast from '../assets/component/Toast';
 import SearchBar from '../assets/component/SearchBar';
 import apiClient from '../services/apiClient';
 import { getAllTransactions } from '../services/transactionService';
+import InvoiceChatWidget from '../components/InvoiceChat/InvoiceChatWidget';
 
 // ── Skeleton (copied from Home) ──────────────────────────────────
 const Skeleton = ({ className }) => (
@@ -244,6 +245,7 @@ const TransactionPage = () => {
       {toast && (
         <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
       )}
+      <InvoiceChatWidget />
     </div>
   );
 };
