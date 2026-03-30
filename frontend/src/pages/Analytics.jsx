@@ -1,154 +1,308 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import DashBar from '../assets/component/DashBar'
 import AnalyticPiChart from '../assets/component/AnalyticPiChart'
-import PiChart from '../assets/component/PiChart'
-import { useEffect } from 'react';
-import { useState } from 'react';
-
-import { auth } from '../firebase';
-import { getAllIncomes } from '../services/incomeService';
-import { getAllExpenses } from '../services/expenseService';
-import ExpenseAnalaticPichart from '../assets/component/ExpenseAnalaticPichart';
+import ExpenseAnalaticPichart from '../assets/component/ExpenseAnalaticPichart'
+import { auth } from '../firebase'
+import { getAllIncomes } from '../services/incomeService'
+import { getAllExpenses } from '../services/expenseService'
 
 const Analytics = () => {
 
-  const [incomes, setIncomes] = useState([])
-      const [expenses, setExpenses] = useState([])
-      const [loading, setLoading] = useState(true);
-  
-    const fetchData = async () => {
-        setLoading(true)
-        try {
-          const [incRes, expRes] = await Promise.all([getAllIncomes(),getAllExpenses()])
-    
-          console.log("Incomes from backend:", incRes)   // <<-- THIS LINE
-        console.log("Expenses from backend:", expRes)
-        
-          setIncomes(Array.isArray(incRes) ? incRes : [])
-          setExpenses(Array.isArray(expRes) ? expRes : [])
-        } catch (err) {
-          console.error('Error fetching incomes/expenses', err)
-          setIncomes([])
-          setExpenses([])
-        } finally {
-          setLoading(false)
-        }
-      }
-      
-   useEffect(() => {
-      const unsub = auth.onAuthStateChanged((user) => {
-        if (user) fetchData()
-        else {
-          setIncomes([])
-          setExpenses([])
-          setLoading(false)
-        }
-      })
-      return () => unsub()
-    }, []);
-  
-    const getTotalByCategory = (data, category) => {
-    return data
-      .filter(item => item.category === category)
-      .reduce((sum, item) => sum + Number(item.amount), 0)
+  // ── Backend state ────────────────────────────────────────────────
+  const [incomes, setIncomes]   = useState([])
+  const [expenses, setExpenses] = useState([])
+  const [loading, setLoading]   = useState(true)
+
+  // ── Animation state ──────────────────────────────────────────────
+  const [loaded, setLoaded] = useState(false)
+
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const [incRes, expRes] = await Promise.all([getAllIncomes(), getAllExpenses()])
+      console.log('Incomes from backend:', incRes)
+      console.log('Expenses from backend:', expRes)
+      setIncomes(Array.isArray(incRes) ? incRes : [])
+      setExpenses(Array.isArray(expRes) ? expRes : [])
+    } catch (err) {
+      console.error('Error fetching incomes/expenses', err)
+      setIncomes([])
+      setExpenses([])
+    } finally {
+      setLoading(false)
+    }
   }
-    
-  // Calculate Income by Category
-  const totalSalary = getTotalByCategory(incomes, "Salary/Wages")
-  const totalInvestment = getTotalByCategory(incomes, "Investment")
-  const  totalBusinessIncome = getTotalByCategory(incomes, "Business Income")
-  const  totalFreelance = getTotalByCategory(incomes, "Freelance/Side hustle")
-  const  totalOthers = getTotalByCategory(incomes, "Others")
 
-  //Calculate Expense by Category
+  useEffect(() => {
+    const unsub = auth.onAuthStateChanged((user) => {
+      if (user) fetchData()
+      else {
+        setIncomes([])
+        setExpenses([])
+        setLoading(false)
+      }
+    })
+    return () => unsub()
+  }, [])
 
-const totalFoodandDrink = getTotalByCategory(expenses, "Food & Drink")
-const totalHousing = getTotalByCategory(expenses, "Housing")
-const totalTransportation = getTotalByCategory(expenses, "Transportation")
-const totalBills = getTotalByCategory(expenses, "Bills & Utilities")
-const totalHealth = getTotalByCategory(expenses, "Health & Medical")
+  useEffect(() => {
+    const t = setTimeout(() => setLoaded(true), 80)
+    return () => clearTimeout(t)
+  }, [])
 
-const formatCurrency = (amount) => {
-  return Number(amount).toLocaleString('en-LK', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-};
-  
+  // ── Backend calculations ─────────────────────────────────────────
+  const getTotalByCategory = (data, category) =>
+    data.filter(item => item.category === category)
+        .reduce((sum, item) => sum + Number(item.amount), 0)
+
+  const totalSalary         = getTotalByCategory(incomes, 'Salary/Wages')
+  const totalInvestment     = getTotalByCategory(incomes, 'Investment')
+  const totalBusinessIncome = getTotalByCategory(incomes, 'Business Income')
+  const totalFreelance      = getTotalByCategory(incomes, 'Freelance/Side hustle')
+  const totalOthers         = getTotalByCategory(incomes, 'Others')
+
+  const totalFoodandDrink   = getTotalByCategory(expenses, 'Food & Drink')
+  const totalHousing        = getTotalByCategory(expenses, 'Housing')
+  const totalTransportation = getTotalByCategory(expenses, 'Transportation')
+  const totalBills          = getTotalByCategory(expenses, 'Bills & Utilities')
+  const totalHealth         = getTotalByCategory(expenses, 'Health & Medical')
+
+  const formatCurrency = (amount) =>
+    Number(amount).toLocaleString('en-LK', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+
+  const totalIncome  = totalSalary + totalInvestment + totalBusinessIncome + totalFreelance + totalOthers
+  const totalExpense = totalFoodandDrink + totalHousing + totalTransportation + totalBills + totalHealth
+  const netBalance   = totalIncome - totalExpense
+
+  // staggered fade-up for each item
+  const stagger = (i) => ({
+    style: {
+      transitionDelay: `${120 + i * 60}ms`,
+      transitionProperty: 'opacity, transform',
+      transitionDuration: '500ms',
+      transitionTimingFunction: 'ease',
+      opacity: loaded ? 1 : 0,
+      transform: loaded ? 'translateY(0)' : 'translateY(14px)',
+    }
+  })
+
+  const incomeRows = [
+    { label: 'Salary / Wages',          value: totalSalary },
+    { label: 'Freelance / Side Hustle', value: totalFreelance },
+    { label: 'Business Income',         value: totalBusinessIncome },
+    { label: 'Investment',              value: totalInvestment },
+    { label: 'Others',                  value: totalOthers },
+  ]
+
+  const expenseRows = [
+    { label: 'Bills & Utilities',  value: totalBills },
+    { label: 'Health & Medical',   value: totalHealth },
+    { label: 'Food & Drinks',      value: totalFoodandDrink },
+    { label: 'Transportation',     value: totalTransportation },
+    { label: 'Housing',            value: totalHousing },
+  ]
+
   return (
-    <div className='w-full min-h-screen flex flex-col'>
-      <DashBar/>
-      <div className='flex-1 flex justify-center items-center py-6 sm:py-8 md:py-10 lg:py-12 xl:py-14 px-2 sm:px-3 md:px-4'>
-      <div className='w-full md:w-250 lg:w-260 xl:w-280 h-auto px-3 sm:px-4 md:px-6 lg:px-8 xl:px-10 py-4 sm:py-5 md:py-6 lg:py-8 xl:py-10 rounded-lg shadow-md 
-                    transition-all duration-300 
-                    hover:shadow-xl hover:scale-101'>
-              <div className='flex flex-col lg:flex-row justify-center items-center gap-16 sm:gap-20 md:gap-24 lg:gap-32 xl:gap-40'>
-                <div className='flex flex-col items-center justify-center w-full sm:w-96'>
-                <div className='w-full sm:w-96 md:w-100 lg:w-110 xl:w-120 h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 bg-[#8080FF] rounded border-3xl flex justify-center items-center mb-4 sm:mb-5 md:mb-6 lg:mb-8 xl:mb-10'>
-                <span className='text-white text-xs sm:text-sm md:text-base lg:text-base xl:text-lg'>Income</span>
-                </div>
-                <div className='w-full sm:w-[450px] md:w-[500px] lg:w-[580px] xl:w-[650px] h-auto flex items-center justify-center'>
-                <div className='w-full sm:w-[450px] md:w-[500px] lg:w-[580px] xl:w-[650px] h-auto flex items-center justify-center'>
-                <AnalyticPiChart totalSalary = {totalSalary} totalBusinessIncome = {totalBusinessIncome} totalFreelance = {totalFreelance} totalInvestment = {totalInvestment} totalOthers = {totalOthers} />
-                </div>
-                </div>
-                <div className='w-full sm:w-96 md:w-100 lg:w-110 xl:w-120 h-auto bg-green-500/8 rounded border-3xl flex flex-col gap-1.5 sm:gap-2 md:gap-2 lg:gap-2.5 xl:gap-3 p-2.5 sm:p-3 md:p-4 lg:p-5 xl:p-6'>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Salary</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalSalary)}</span>
-                  </div>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Freelance</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalFreelance)}</span>
-                  </div>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Business Income</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalBusinessIncome)}</span>
-                  </div>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Investment</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalInvestment)}</span>
-                  </div>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Others</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalOthers)}</span>
-                  </div>
-                </div>
+    <div className='w-full min-h-screen bg-hero-pattern bg-cover bg-center absolute top-0 left-0'>
+
+      <div className='fixed inset-0 bg-black/60 pointer-events-none' />
+
+      <div className='relative'>
+
+        {/* NAV */}
+        <div
+          style={{
+            opacity: loaded ? 1 : 0,
+            transition: 'opacity 400ms ease',
+          }}
+          className='flex justify-center pt-8'
+        >
+          <DashBar />
+        </div>
+
+        {/* PAGE TITLE — left-aligned, raw, editorial */}
+        <div
+          style={{
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 600ms ease 100ms, transform 600ms ease 100ms',
+          }}
+          className='max-w-6xl mx-auto px-6 mt-14 mb-2'
+        >
+          <div className='flex items-baseline gap-4'>
+            <h1 className='text-white text-6xl font-black tracking-tighter leading-none'>
+              Analytics
+            </h1>
+            <span className='text-blue-400 text-sm font-mono uppercase tracking-widest mt-1'>
+              / overview
+            </span>
+          </div>
+          <div className='h-px bg-blue-500/30 mt-4 mb-0' />
+        </div>
+
+        {/* SUMMARY BAR — inline, not pills */}
+        <div
+          style={{
+            opacity: loaded ? 1 : 0,
+            transform: loaded ? 'translateY(0)' : 'translateY(12px)',
+            transition: 'opacity 500ms ease 250ms, transform 500ms ease 250ms',
+          }}
+          className='max-w-6xl mx-auto px-6 mt-5 mb-10'
+        >
+          <div className='flex flex-wrap gap-x-10 gap-y-3'>
+            <div>
+              <p className='text-blue-400/70 text-xs font-mono uppercase tracking-widest mb-0.5'>income</p>
+              <p className='text-white text-2xl font-bold tabular-nums'>Rs {formatCurrency(totalIncome)}</p>
+            </div>
+            <div className='w-px bg-white/10 self-stretch hidden sm:block' />
+            <div>
+              <p className='text-blue-300/70 text-xs font-mono uppercase tracking-widest mb-0.5'>expenses</p>
+              <p className='text-white text-2xl font-bold tabular-nums'>Rs {formatCurrency(totalExpense)}</p>
+            </div>
+            <div className='w-px bg-white/10 self-stretch hidden sm:block' />
+            <div>
+              <p className='text-sky-400/70 text-xs font-mono uppercase tracking-widest mb-0.5'>net balance</p>
+              <p className={`text-2xl font-bold tabular-nums ${netBalance >= 0 ? 'text-white' : 'text-blue-300'}`}>
+                {netBalance < 0 ? '−' : ''} Rs {formatCurrency(Math.abs(netBalance))}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* LOADING */}
+        {loading ? (
+          <div className='flex justify-center items-center py-32'>
+            <div className='flex items-center gap-3'>
+              <div className='w-4 h-4 border border-blue-500/40 border-t-blue-400 rounded-full animate-spin' />
+              <p className='text-blue-300/60 text-sm font-mono'>loading data...</p>
+            </div>
+          </div>
+        ) : (
+
+          <div className='max-w-6xl mx-auto px-6 pb-20 flex flex-col lg:flex-row gap-10'>
+
+            {/* ── INCOME PANEL ──────────────────────────────────── */}
+            <div
+              style={{
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateX(0)' : 'translateX(-24px)',
+                transition: 'opacity 600ms ease 300ms, transform 600ms ease 300ms',
+              }}
+              className='flex-1'
+            >
+              {/* Section label */}
+              <div className='flex items-center gap-2 mb-5'>
+                <span className='w-1 h-5 bg-blue-400 rounded-full inline-block' />
+                <span className='text-blue-400 text-xs font-mono uppercase tracking-widest'>Income</span>
               </div>
-              <div className='flex flex-col items-center justify-center w-full sm:w-96'>
-                <div className='w-full sm:w-96 md:w-100 lg:w-110 xl:w-120 h-7 sm:h-8 md:h-9 lg:h-10 xl:h-11 bg-[#0353a4] rounded border-3xl flex justify-center items-center mb-4 sm:mb-5 md:mb-6 lg:mb-8 xl:mb-10'>
-                <span className='text-white text-xs sm:text-sm md:text-base lg:text-base xl:text-lg'>Expenses</span>
-                </div>
-                <div className='w-full sm:w-96 md:w-100 lg:w-110 xl:w-120 h-auto flex items-center justify-center'>
-                <div className='w-full sm:w-[450px] md:w-[500px] lg:w-[580px] xl:w-[650px] h-auto flex items-center justify-center'>
-                <ExpenseAnalaticPichart totalBills={totalBills} totalFoodandDrink={totalFoodandDrink} totalHealth={totalHealth} totalHousing={totalHousing} totalTransportation={totalTransportation}/>
-                </div>
-                </div>
-                <div className='w-full sm:w-96 md:w-100 lg:w-110 xl:w-120 h-auto bg-green-500/8 rounded border-3xl flex flex-col gap-1.5 sm:gap-2 md:gap-2 lg:gap-2.5 xl:gap-3 p-2.5 sm:p-3 md:p-4 lg:p-5 xl:p-6'>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Bills & Utilities</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalBills)}</span>
+
+              {/* Chart area — no card wrapper, just raw */}
+              <div className='flex justify-center mb-8'>
+                <AnalyticPiChart
+                  totalSalary={totalSalary}
+                  totalBusinessIncome={totalBusinessIncome}
+                  totalFreelance={totalFreelance}
+                  totalInvestment={totalInvestment}
+                  totalOthers={totalOthers}
+                />
+              </div>
+
+              {/* Breakdown table */}
+              <div className='space-y-0'>
+                {incomeRows.map((row, i) => (
+                  <div
+                    key={row.label}
+                    {...stagger(i)}
+                    className='flex justify-between items-center py-3 border-b border-white/8
+                               hover:pl-2 transition-all duration-200 group cursor-default'
+                  >
+                    <span className='text-white/60 text-sm group-hover:text-white/90 transition-colors duration-200'>
+                      {row.label}
+                    </span>
+                    <span className='text-white text-sm font-semibold tabular-nums'>
+                      Rs {formatCurrency(row.value)}
+                    </span>
                   </div>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Health & Medical</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalHealth)}</span>
-                  </div>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Food & Drinks</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalFoodandDrink)}</span>
-                  </div>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Transportation</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalTransportation)}</span>
-                  </div>
-                  <div className='flex justify-between items-center py-1 sm:py-1.5 md:py-2 lg:py-2 xl:py-2.5'>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Housing</span>
-                    <span className='text-white text-xs sm:text-sm md:text-sm lg:text-base xl:text-base'>Rs {formatCurrency(totalHousing)}</span>
-                  </div>
+                ))}
+
+                {/* Total row */}
+                <div
+                  {...stagger(incomeRows.length)}
+                  className='flex justify-between items-center pt-4 mt-1'
+                >
+                  <span className='text-blue-400 text-xs font-mono uppercase tracking-widest'>Total</span>
+                  <span className='text-blue-400 font-bold text-base tabular-nums'>
+                    Rs {formatCurrency(totalIncome)}
+                  </span>
                 </div>
               </div>
             </div>
-        </div>
+
+            {/* Vertical divider — only on lg */}
+            <div className='hidden lg:block w-px bg-white/8 self-stretch mx-2' />
+
+            {/* ── EXPENSE PANEL ─────────────────────────────────── */}
+            <div
+              style={{
+                opacity: loaded ? 1 : 0,
+                transform: loaded ? 'translateX(0)' : 'translateX(24px)',
+                transition: 'opacity 600ms ease 400ms, transform 600ms ease 400ms',
+              }}
+              className='flex-1'
+            >
+              {/* Section label */}
+              <div className='flex items-center gap-2 mb-5'>
+                <span className='w-1 h-5 bg-blue-600 rounded-full inline-block' />
+                <span className='text-blue-300 text-xs font-mono uppercase tracking-widest'>Expenses</span>
+              </div>
+
+              {/* Chart area */}
+              <div className='flex justify-center mb-8'>
+                <ExpenseAnalaticPichart
+                  totalBills={totalBills}
+                  totalFoodandDrink={totalFoodandDrink}
+                  totalHealth={totalHealth}
+                  totalHousing={totalHousing}
+                  totalTransportation={totalTransportation}
+                />
+              </div>
+
+              {/* Breakdown table */}
+              <div className='space-y-0'>
+                {expenseRows.map((row, i) => (
+                  <div
+                    key={row.label}
+                    {...stagger(i)}
+                    className='flex justify-between items-center py-3 border-b border-white/8
+                               hover:pl-2 transition-all duration-200 group cursor-default'
+                  >
+                    <span className='text-white/60 text-sm group-hover:text-white/90 transition-colors duration-200'>
+                      {row.label}
+                    </span>
+                    <span className='text-white text-sm font-semibold tabular-nums'>
+                      Rs {formatCurrency(row.value)}
+                    </span>
+                  </div>
+                ))}
+
+                {/* Total row */}
+                <div
+                  {...stagger(expenseRows.length)}
+                  className='flex justify-between items-center pt-4 mt-1'
+                >
+                  <span className='text-blue-300 text-xs font-mono uppercase tracking-widest'>Total</span>
+                  <span className='text-blue-300 font-bold text-base tabular-nums'>
+                    Rs {formatCurrency(totalExpense)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
       </div>
     </div>
   )
