@@ -8,6 +8,7 @@ import CalanderDate from '../assets/component/CalanderDate'
 import AddButton from '../assets/component/AddButton'
 import Toast from '../assets/component/Toast'
 import { createIncome } from '../services/incomeService'
+import InvoiceChatWidget from '../components/InvoiceChat/InvoiceChatWidget'
 
 const IncomePage = () => {
 
@@ -334,6 +335,7 @@ const IncomePage = () => {
           text-align: center;
         }
       `}</style>
+      <InvoiceChatWidget/>
     </div>
   );
 };
