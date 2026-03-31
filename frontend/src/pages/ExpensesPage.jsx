@@ -10,6 +10,7 @@ import ExpenseNotes from '../assets/component/ExpenseNotes'
 import AddButton from '../assets/component/AddButton'
 import Toast from '../assets/component/Toast'
 import { createExpense } from '../services/expenseService'
+import InvoiceChatWidget from '../components/InvoiceChat/InvoiceChatWidget';
 
 const ExpensesPage = () => {
 
@@ -347,6 +348,7 @@ const ExpensesPage = () => {
           text-align: center;
         }
       `}</style>
+      <InvoiceChatWidget />
     </div>
   );
 };

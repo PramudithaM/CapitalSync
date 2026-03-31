@@ -9,6 +9,7 @@ import { auth } from '../firebase'
 import AccountCard from '../assets/component/AccountCard';
 import LatesFiveIncomes from '../assets/component/LatesFiveIncomes';
 import LatestFiveExpenses from '../assets/component/LatestFiveExpenses';
+import InvoiceChatWidget from '../components/InvoiceChat/InvoiceChatWidget';
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -388,6 +389,7 @@ const Home = () => {
 
         </div>
       </div>
+      <InvoiceChatWidget />
     </div>
   )
 }
