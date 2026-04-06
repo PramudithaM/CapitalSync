@@ -348,7 +348,7 @@ const ExpensesPage = () => {
           text-align: center;
         }
       `}</style>
-      <InvoiceChatWidget />
+      <InvoiceChatWidget /> 
     </div>
   );
 };
